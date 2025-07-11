@@ -8,8 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      #nixos-cosmic.nixosModules.default
-      inputs.home-manager.nixosModules.default
+      # nixos-cosmic.nixosModules.default
+       #inputs.home-manager.nixosModules.default
     ];
    
    # XWayland
@@ -17,33 +17,33 @@
 
   # amdgpu setup
   # Enable OpenGL
-  hardware.opengl = {
-    enable = true;
+#  hardware.opengl = {
+#    enable = true;
    # driSupport = true;
    # driSupport32Bit = true;
-  };
+#  };
+#
+#  hardware.opengl.extraPackages = with pkgs; [
+#  amdvlk
+#  ];
+#  # For 32 bit applications 
+#  hardware.opengl.extraPackages32 = with pkgs; [
+#  driversi686Linux.amdvlk
+#  ];
+#   
+#  # Load nvidia driver for Xorg and Wayland
+#  services.xserver.videoDrivers = ["amdgpu radeon"];
+#  
+#  hardware.nvidia = {
 
-  hardware.opengl.extraPackages = with pkgs; [
-  amdvlk
-  ];
-  # For 32 bit applications 
-  hardware.opengl.extraPackages32 = with pkgs; [
-  driversi686Linux.amdvlk
-  ];
-   
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["amdgpu radeon"];
-  
-  hardware.nvidia = {
-
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = false;
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
+ #   # Modesetting is required.
+ #   modesetting.enable = true;
+#
+#    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+#    powerManagement.enable = false;
+#    # Fine-grained power management. Turns off GPU when not in use.
+#    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+#    powerManagement.finegrained = false;
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
@@ -52,15 +52,15 @@
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
     # Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
+#    open = false;
 
     # Enable the Nvidia settings menu,
 	# accessible via `nvidia-settings`.
-    nvidiaSettings = true;
+#    nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
+#    package = config.boot.kernelPackages.nvidiaPackages.stable;
+#  };
 
   # Bootloader
   boot.loader.grub.enable = true;
@@ -68,8 +68,11 @@
   # boot.loader.grub.useOSProber = true;
  
 
-  boot.initrd.kernelModules = [ "amdgpu"];
+#  boot.initrd.kernelModules = [ "amdgpu"];
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # desktops / window managers
+  services.desktopManager.cosmic.xwayland.enable = true;
 
   #direnv
   programs.direnv.enable = true;
@@ -366,34 +369,7 @@
     lua
     python3
     
-    # cosmic applications
-    cosmic-bg
-    cosmic-osd
-    cosmic-term
-    cosmic-edit
-    cosmic-comp
-    cosmic-store
-    cosmic-randr
-    cosmic-panel
-    cosmic-icons
-    cosmic-files
-    cosmic-applets
-    cosmic-settings
-    # cosmic-protocols
-    cosmic-session
-    cosmic-applets
-    cosmic-screenshot
-    cosmic-launcher
-    cosmic-wallpapers
-    cosmic-screenshot
-    cosmic-applibrary
-    cosmic-design-demo
-    cosmic-notifications
-    cosmic-settings-daemon
-    cosmic-workspaces-epoch
-    flam3
-    qosmic
-
+   
     xdg-desktop-portal-cosmic
 
    # gaming
@@ -409,33 +385,7 @@
    # nvidia-settings
    # nvidia-persistenced
    
-   # waybar appllcations
-    waybar
-    gtkmm3
-    jsoncpp
-    fmt
-    spdlog
-    # libgtk-3-dev #[gtk-layer-shell]
-    gobject-introspection #[gtk-layer-shell]
-    # libpulse #[Pulseaudio module]
-    libnl #[Network module]
-    libappindicator-gtk3 #[Tray module]
-    libdbusmenu-gtk3 #[Tray module]
-    libmpdclient #[MPD module]
-    # libsndio #[sndio module# ]
-    libevdev #[KeyboardState module]
-    # xkbregistry
-    upower #[UPower battery module]
-
-    # asus kernel and sensors
-    linuxKernel.packages.linux_zen.zenpower
-    linuxKernel.packages.linux_zen.asus-ec-sensors
-    linuxKernel.packages.linux_zen.asus-wmi-sensors
-    linuxKernel.packages.linux_xanmod.asus-ec-sensors
-    # linuxKernel.pacakges.linux_xanmod_latest.asus-ec-sensors
-    linuxKernel.packages.linux_xanmod_stable.asus-ec-sensors
-    linuxKernel.packages.linux_xanmod_latest.asus-wmi-sensors
-
+   
     # applications
     virt-manager
     sublime4
@@ -453,9 +403,9 @@
       openmoji-color
       hermit
       source-code-pro
-      terminus_font
-      nerdfonts
-      terminus-nerdfont
+      #terminus_font
+      #nerdfonts
+      #terminus-nerdfont
       jetbrains-mono
       nixos-icons
       material-icons
@@ -481,15 +431,18 @@
     # startship prompt
     programs.starship.enable = true;
 
-    environment.sessionVariables = {
-     FLAKE = "/etc/nixos/";
+    programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "/etc/nixos/";
         };
 
     # cosmic-comp
-    environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
+    # environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = 1;
 
   # Hyperland window manager
-   programs.hyprland.enable = true;
+  # programs.hyprland.enable = true;
 
    # nix grub generations
    system.autoUpgrade.enable = true;
@@ -499,7 +452,7 @@
    nix.gc = {
    automatic = true;
    dates = "Sun 24:00";
-   options = "--delete-older-than 7d";
+   #options = "--delete-older-than 7d";
   };
 
     nixpkgs.config.permittedInsecurePackages = [
@@ -520,19 +473,19 @@
   # };
 
   # Asus List services that you want to enable:
-  services.supergfxd.enable = true;
-  services = {
-    asusd = {
-      enable = true;
-      enableUserService = true;
-    };
-  };
-  services.supergfxd.settings = {
-  supergfxctl-mode = "Integrated";
-  gfx-vfio-enable = true;
-  };  # Power Profiles
-  systemd.services.supergfxd.path = [ pkgs.pciutils ];
-  services.power-profiles-daemon.enable = true;
+  #services.supergfxd.enable = true;
+  #services = {
+  #  asusd = {
+  #    enable = true;
+  #    enableUserService = true;
+  #  };
+  #};
+  #services.supergfxd.settings = {
+  #supergfxctl-mode = "Integrated";
+  #gfx-vfio-enable = true;
+  #};  # Power Profiles
+  #systemd.services.supergfxd.path = [ pkgs.pciutils ];
+  #services.power-profiles-daemon.enable = true;
 
 
   # List services that you want to enable:
@@ -548,9 +501,9 @@
     # services.asusd.enable = true;
 
   # list of programs with services
-    programs.rog-control-center.enable = true;
-    programs.rog-control-center.autoStart = false;
-    services.smartd.enable = true;
+  #  programs.rog-control-center.enable = true;
+  #  programs.rog-control-center.autoStart = false;
+  #  services.smartd.enable = true;
     programs.zsh.enableLsColors = true;
     programs.zsh.enableCompletion = true;
     programs.zsh.enableBashCompletion = true;
